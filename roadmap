@@ -1,0 +1,198 @@
+Konzept:
+
+1. Aufbau
+- PPP ist ein Berufsplugin. Dort können Spieler Berufe annehmen. Mit Aktionen wie Abbauen etc. gewinnen die Spieler neben
+  den Items auch Geld und Berufserfahrung, welche durch ihren gewählten Beruf definiert ist.
+- Spieler dürfen x Anzahl an Berufe gleichzeitig annehmen. (Config)
+- Spieler können durch Berufserfahrung die Karriereleiter nach obensteigen. Dies müssen sie aber aktiv durch die GUI oder
+  einen Befehl tun.
+- Berufe sollen im Standart auf witzige art gestaffelt sein. Beispiel:
+  - Bergmann hilf assistent helfer gehilfe junior
+  - Bergmann hilf assistent helfer gehilfe
+  - Bergmann hilf assistent helfer gehilfe senior
+  - Bergmann hilf assistent helfer vorarbeiter junior
+  - Bergmann hilf assistent helfer vorarbeiter
+  - Bergmann hilf assistent helfer vorarbeiter senior
+  - Bergmann hilf assistent helfer junior
+  - Bergmann hilf assistent helfer
+  - Bergmann hilf assistent helfer senior
+  - Bergmann hilf assistent vorarbeiter gehilfe junior
+  - Bergmann hilf assistent vorarbeiter gehilfe
+  - Bergmann hilf assistent vorarbeiter gehilfe senior
+  - Bergmann hilf assistent vorarbeiter junior
+  - Bergmann hilf assistent vorarbeiter
+  - Bergmann hilf assistent vorarbeiter senior
+  - Bergmann hilf assistent junior
+  - Bergmann hilf assistent senior
+  - Bergmann assistent helfer gehilfe junior
+  - Bergmann assistent helfer gehilfe
+  - Bergmann assistent helfer gehilfe senior
+  - Bergmann assistent helfer vorarbeiter junior
+  - Bergmann assistent helfer vorarbeiter
+  - Bergmann assistent helfer vorarbeiter senior
+  - Bergmann assistent helfer junior
+  - Bergmann assistent helfer
+  - Bergmann assistent helfer senior
+  - Bergmann assistent vorarbeiter gehilfe junior
+  - Bergmann assistent vorarbeiter gehilfe
+  - Bergmann assistent vorarbeiter gehilfe senior
+  - Bergmann assistent vorarbeiter junior
+  - Bergmann assistent vorarbeiter
+  - Bergmann assistent vorarbeiter senior
+  - Bergmann junior
+  - Bergmann
+  - Bergmann senior
+  - Bergmann vorarbeiter assistent helfer gehilfe junior
+  - Bergmann vorarbeiter assistent helfer gehilfe
+  - Bergmann vorarbeiter assistent helfer gehilfe senior
+  - Bergmann vorarbeiter assistent helfer vorarbeiter junior
+  - Bergmann vorarbeiter assistent helfer vorarbeiter
+  - Bergmann vorarbeiter assistent helfer vorarbeiter senior
+  - Bergmann vorarbeiter assistent helfer junior
+  - Bergmann vorarbeiter assistent helfer
+  - Bergmann vorarbeiter assistent helfer senior
+  - Bergmann vorarbeiter assistent junior
+  - Bergmann vorarbeiter assistent
+  - Bergmann vorarbeiter assistent senior
+  - Bergmann vorarbeiter junior
+  - Bergmann vorarbeiter
+  - Bergmann vorarbeiter senior
+  - Bergmann meister assistent helfer gehilfe junior
+  - Bergmann meister assistent helfer gehilfe
+  - Bergmann meister assistent helfer gehilfe senior
+  - Bergmann meister assistent helfer junior
+  - Bergmann meister assistent helfer
+  - Bergmann meister assistent helfer senior
+  - Bergmann meister assistent junior
+  - Bergmann meister assistent
+  - Bergmann meister assistent senior
+  - Bergmann meister junior
+  - Bergmann meister
+  - Bergmann meister senior
+- Berufe sollen auch Restriktionen haben. Beispielsweise, Permission oder Spielerzeiten. Oder andere Berufe neben.
+  Sodass man eventuell Berufe auch zu einem kombinieren kann.
+- Berufe sollten zu einer bestimmten Berufskategorie gehören um diese Besser einordnen zu können und um statistische
+  Dinge machen zu können.
+  
+2. Vergütung
+ - Berufe sollen angeben, welche Vergütung man bei Aktion pro Block/Entity in Geld oder Erfahrung bekommt.
+ - Berufe sollen die Möglichkeit bekommen, das droppen von Items bei Aktion mit Block/Entitys zu verhindern zu können.
+ 
+3. Beförderung
+ - Eine Beförderung muss der Spieler aktiv selber nachgehen. Durch eine GUI oder einen Command.
+ - Bei einer Beförderung können dann ebenso Befehl von der Konsole durchgeführt werden, bspw. um Permission oder so zu vergeben.
+ - Der Beruf, den man nach der Beförderung erhält gibt vor, ob man exessive Berufserfahrung vom vorherigen Job verliert
+   oder ganz/anteilig mit in die neuen Beruf mitnehmen kann.
+ 
+4. Berufe wechseln
+ - Spieler sollten die Möglichkeite haben ihre Berufe wechseln zu können.
+ - Der noch jetztige Beruf legt fest ob und wieviel Berufserfahrung er verliert in dem Beruf.
+ - Sollte die Berufserfahrung unter 0 langen, wird der Spieler degradiert auf den vorherigen Beruf.
+ - Danach wird dieser dann abgelegt um den neuen anzunehmen.
+ - Logischerweise kann man Berufe der gleichen Berufskategorie wie man schon einen hat nicht erneut annehmen.
+ 
+5. Berufslog
+ - Wenn Spieler ihre Berufe ausüben, wird alle x Minuten diese Aktion in einem Berufslog zusammengefasst.
+ - Dabei wird aufgezeichnet, welche Berufskategorie es war, welche Aktion, welcher Block/Entity, wie oft und wieviel Geld
+   dies erbracht hatte.
+   
+6. Berufsboost
+ - In einer Config können Berufsboost erstellt werden.
+ - Diese definieren welche Aktion & Block/Entity mit welchem Faktor geboostet werden und ob Geld oder Berufserfahrung geboostet
+   wird.
+ - Diese werden dann per Permission getrackt.
+
+7. WorldGuard Flag
+ - PPP wird WG Flags erhalten.
+ - ppp-compensation-money definiert ob man Geld durch seinen Beruf erlangt. Wenn "false", ist die Mechanik ausgeschaltet.
+   Default ist true.
+ - ppp-compensation-pexp definiert ob man Berufserfahrung durch seinen Beruf erlangt. Wenn "false", ist die Mechanik
+   ausgeschaltet. Default ist true.
+ - ppp-boost-money definiert ob man Geldboost für seinen Beruf erhält. Wenn "false", wird kein Booster mit Geldbezug
+   einkalkuliert. Default true.
+ - ppp-boost-pexp definiert ob man Berufserfahrungboost für seinen Beruf erhält. Wenn "false", wird kein Booster mit
+   Berufserfahrungsboost einkalkuliert. Default true.
+ - ppp-multiplier-money-x2 definiert, ob man das erwirtschafte Geld durch seinen Beruf verdoppelt bekommt.
+   Default false.
+ - ppp-multiplier-pexp-x2 definiert, ob man das erwirtschafte Berufserfahrung durch seinen Beruf verdoppelt bekommt.
+   Default false.
+ - ppp-multiplier-money-x1-5
+ - ppp-multiplier-pexp-x1-5
+ - ppp-multiplier-money-x3
+ - ppp-multiplier-pexp-x3
+ - ppp-multiplier-money-x4
+ - ppp-multiplier-pexp-x4
+ - ppp-multiplier-money-x5
+ - ppp-multiplier-pexp-x5
+ - ppp-multiplier-money-x10
+ - ppp-multiplier-pexp-x10
+ 
+8. Commands
+ - /ppp | Befehlsübersicht
+ - /profession | Öffnet ein Gui welches in ein Übersichtsfeld geht.
+ - /profession info [Spielername] | Zeigt alle aktive & deaktiven Berufe des Spielers an. 
+   Sowie die total erhalten Berufserfahrung und das totale erwirtschafte Geld Insgesamt und per Berufskategorie.
+   und total erwirtschaftetes Geld.
+ - /profession show <Berufskategorie> | Zeigt den Beruf an. Ob aktiv/deaktiv/nicht angenommen, sowie AnnahmeZeit
+   etc.
+ - /profession log <Berufskategorie> [Spielername] | Zeigt für das Berufslog für die Beruskategorie an.
+ - /profession progression <Berufskategorie> [Spielername] | Zeit den Werdegang in der Berufskategorie an.
+ - /profession compensation <Berufskategorie> [Material/EntityType] | Zeigt die Vergütung der Berufskategorie an.
+   Optional auch nur für das angegebenen Material bzw. EntitytType.
+ - /profession compensationsimulate <Berufskategorie> <Aktion> [Pausenzeit zwischen Zieländerung in sek] [Leerlaufzeit gesamt] | Simuliert
+   wieviel man mit dem aktuellen Werkzeug in der Haupthand Geld und Berufserfahrung erhalten würde, wenn man in einer Stunde
+   nur dies machen würde.
+ - /profession join <Berufskategorie> | Nimmt den Beruf an.
+
+9. GUI (?)
+ - /profession | Öffnet ein Gui welches in ein Übersichtsfeld geht. (MainGui)
+ - MainGui stellt folgende Optionen dar:
+   - Info Button
+     - das gleiche wie /profession info
+   - Aktive Berufe
+     - Stellt alle aktive Berufe dar.
+     - Links oder Rechtsklick auf die Berufe zeigt das gleiche an wie /profession show
+     - Shift-Links oder Rechtsklick öffnet ein Gui mit allen Deaktiven und nicht angenommenen 
+       Berufskategorien um diese dann zu wechseln.
+   - Deaktive Berufe
+     - Links oder Rechtsklick macht das gleiche wie /profession show
+   - Nicht angenommene Berufe
+     - Links oder Rechtsklick macht das gleiche wie /profession show
+     - Shift-Links oder Rechtsklick nimmt den Beruf an.
+  
+10. Yaml
+ - Config
+   - Anzahl an maximal gleichzeitigen Berufen
+   - CountPermission für Werkblöcke (Öfen etc.)
+ - Boost (Unbegrenzt definierbar)
+   - Boostname
+   - Boostpermission
+   - Geld Multiplikator
+   - Berufserfahrung Multiplikator
+ - Berufkategorie als Ordner
+   - Beruf
+     - Berufsname
+     - Berufskategorie
+     - IstStartBeruf
+     - Zu Verlierende Berufe, wenn angenommen wird. Liste
+     - Vorheriger Beruf (Null für nix)
+     - Nächster Beruf (Null für nix)
+     - Benötigte Berufserfahrung zur Beförderung
+     - Vergütung (Aktion;Material/EntityType;Geld;Berufserfahrung;Erhält man dropps)
+     - Berufswechsel
+       - Verliert BErufserfahrung (0 für nix)
+       - Wird degradiert (Boolean)
+       - Degradiert zu Beruf
+     - Konsolenbefehlsausführung wenn man zu diesem Beruf befördert wird.
+     
+x. Mysql
+ - PlayerData
+   | ID | UUID | Spielername | Letzte Jobänderung | Totale Berufserfahrung | Totale Geldeinkünfte
+ - ActiveProfession
+   | ID | UUID | Berufskategorie | Berufsbezeichnung | Aktuelle Berufserfahrung | Totale Geldeinkünfte | Zeit wann Beruf angenommen wurde |
+ - DeactiveProfession
+   | ID | UUID | Berufskategorie | Berufsbezeichnung | Aktuelle Berufserfahrung | Totale Geldeinkünfte | Zeit wann Beruf angenommen wurde |
+ - ProfessionProgression
+   | ID | UUID | Berufskategorie | Berufsbezeichnung vor der Beförderung/Degradierung | Berufsbezeichnung danach | Zeit
+ - ProfessionLog
+   | ID | UUID | Berufskategorie | Aktion | Block/Entity | Anzahl | Eingenommenes Geld |

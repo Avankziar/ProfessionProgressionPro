@@ -11,7 +11,6 @@ public class BaseConstructor
 	private static ArrayList<BaseConstructor> helpList = new ArrayList<>();
 	private static ArrayList<CommandConstructor> commandTree = new ArrayList<>();
 	private static LinkedHashMap<String, me.avankziar.base.spigot.cmdtree.ArgumentModule> argumentMapSpigot = new LinkedHashMap<>();
-	private static LinkedHashMap<String, me.avankziar.base.bungee.cmdtree.ArgumentModule> argumentMapBungee = new LinkedHashMap<>();
 	private static LinkedHashMap<String, me.avankziar.base.velocity.cmdtree.ArgumentModule> argumentMapVelo = new LinkedHashMap<>();
 	
 	private String name;
@@ -46,11 +45,6 @@ public class BaseConstructor
 	public static LinkedHashMap<String, me.avankziar.base.spigot.cmdtree.ArgumentModule> getArgumentMapSpigot()
 	{
 		return argumentMapSpigot;
-	}
-	
-	public static LinkedHashMap<String, me.avankziar.base.bungee.cmdtree.ArgumentModule> getArgumentMapBungee()
-	{
-		return argumentMapBungee;
 	}
 	
 	public static LinkedHashMap<String, me.avankziar.base.velocity.cmdtree.ArgumentModule> getArgumentMapVelo()
