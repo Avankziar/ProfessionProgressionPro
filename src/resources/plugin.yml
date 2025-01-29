@@ -1,10 +1,10 @@
-name: BaseTemplate
-main: main.java.me.avankziar.base.spigot.BM
+name: ProfessionProgrssionPro
+main: main.java.me.avankziar.ppp.spigot.PPP
 version: 1
 author: Avankziar
-api-version: 1.17
-description: A Template
+api-version: 1.21
+description: A Profession Progression System
 depend: [InterfaceHub]
 softdepend: [RootAdministration]
 website: TBA
-prefix: BM
+prefix: PPP

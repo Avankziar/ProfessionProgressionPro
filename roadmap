@@ -122,10 +122,6 @@ Konzept:
  - ppp-multiplier-pexp-x3
  - ppp-multiplier-money-x4
  - ppp-multiplier-pexp-x4
- - ppp-multiplier-money-x5
- - ppp-multiplier-pexp-x5
- - ppp-multiplier-money-x10
- - ppp-multiplier-pexp-x10
  
 8. Commands
  - /ppp | Befehlsübersicht
@@ -152,7 +148,7 @@ Konzept:
    - Aktive Berufe
      - Stellt alle aktive Berufe dar.
      - Links oder Rechtsklick auf die Berufe zeigt das gleiche an wie /profession show
-     - Shift-Links oder Rechtsklick öffnet ein Gui mit allen Deaktiven und nicht angenommenen 
+     - Shift-Links oder Rechtsklick deaktiviert den Beruf. 
        Berufskategorien um diese dann zu wechseln.
    - Deaktive Berufe
      - Links oder Rechtsklick macht das gleiche wie /profession show
@@ -164,6 +160,8 @@ Konzept:
  - Config
    - Anzahl an maximal gleichzeitigen Berufen
    - CountPermission für Werkblöcke (Öfen etc.)
+   - Dauer bis zum erneuten Berufswechsel.
+   - Dauer bis zum erneuten Berufswechsel mit Permission.
  - Boost (Unbegrenzt definierbar)
    - Boostname
    - Boostpermission
@@ -174,25 +172,25 @@ Konzept:
      - Berufsname
      - Berufskategorie
      - IstStartBeruf
-     - Zu Verlierende Berufe, wenn angenommen wird. Liste
+     - Zu Verlierende Berufe, wenn angenommen wird. Liste (Aka wenn man Berufe fusionieren möchte)
      - Vorheriger Beruf (Null für nix)
      - Nächster Beruf (Null für nix)
-     - Benötigte Berufserfahrung zur Beförderung
+     - Beförderung
+       - Benötigte Berufserfahrung
+       - Benötigte Permission
+       - Mögliche Konsolenbefehle, bei Beförderung zu diesem Beruf
      - Vergütung (Aktion;Material/EntityType;Geld;Berufserfahrung;Erhält man dropps)
      - Berufswechsel
        - Verliert BErufserfahrung (0 für nix)
        - Wird degradiert (Boolean)
        - Degradiert zu Beruf
-     - Konsolenbefehlsausführung wenn man zu diesem Beruf befördert wird.
      
-x. Mysql
+11. Mysql
  - PlayerData
-   | ID | UUID | Spielername | Letzte Jobänderung | Totale Berufserfahrung | Totale Geldeinkünfte
- - ActiveProfession
-   | ID | UUID | Berufskategorie | Berufsbezeichnung | Aktuelle Berufserfahrung | Totale Geldeinkünfte | Zeit wann Beruf angenommen wurde |
- - DeactiveProfession
-   | ID | UUID | Berufskategorie | Berufsbezeichnung | Aktuelle Berufserfahrung | Totale Geldeinkünfte | Zeit wann Beruf angenommen wurde |
+   | ID | UUID | Spielername | Letzte Jobänderung | Totale Berufserfahrung | Totale Geldeinkünfte |
+ - Profession
+   | ID | UUID | Berufskategorie | Berufsbezeichnung | Aktuelle Berufserfahrung | Totale Geldeinkünfte | Zeit wann Beruf angenommen wurde | Aktiv |
  - ProfessionProgression
-   | ID | UUID | Berufskategorie | Berufsbezeichnung vor der Beförderung/Degradierung | Berufsbezeichnung danach | Zeit
+   | ID | UUID | Beförderung oder Degradierung | Berufskategorie | Berufsbezeichnung vor der Beförderung/Degradierung | Berufsbezeichnung danach | Zeit | Eingenommes Geld |
  - ProfessionLog
    | ID | UUID | Berufskategorie | Aktion | Block/Entity | Anzahl | Eingenommenes Geld |
