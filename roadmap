@@ -135,7 +135,8 @@ Konzept:
  - /profession progression <Berufskategorie> [Spielername] | Zeit den Werdegang in der Berufskategorie an.
  - /profession compensation <Berufskategorie> [Material/EntityType] | Zeigt die Vergütung der Berufskategorie an.
    Optional auch nur für das angegebenen Material bzw. EntitytType.
- - /profession compensationsimulate <Berufskategorie> <Aktion> [Pausenzeit zwischen Zieländerung in sek] [Leerlaufzeit gesamt] | Simuliert
+   Booster(Permission) eingerechnet.
+ - /profession compensationsimulate <Berufskategorie> <Aktion> [Pausenzeit zwischen Zieländerung in millisek] [Leerlaufzeit gesamt] | Simuliert
    wieviel man mit dem aktuellen Werkzeug in der Haupthand Geld und Berufserfahrung erhalten würde, wenn man in einer Stunde
    nur dies machen würde.
  - /profession join <Berufskategorie> | Nimmt den Beruf an.
@@ -152,6 +153,7 @@ Konzept:
        Berufskategorien um diese dann zu wechseln.
    - Deaktive Berufe
      - Links oder Rechtsklick macht das gleiche wie /profession show
+     - Shift Links oder Rechtsklick aktiviert den Beruf.
    - Nicht angenommene Berufe
      - Links oder Rechtsklick macht das gleiche wie /profession show
      - Shift-Links oder Rechtsklick nimmt den Beruf an.
@@ -167,6 +169,7 @@ Konzept:
    - Boostpermission
    - Geld Multiplikator
    - Berufserfahrung Multiplikator
+   - Aktion & Material/EntityType
  - Berufkategorie als Ordner
    - Beruf
      - Berufsname
@@ -184,6 +187,9 @@ Konzept:
        - Verliert BErufserfahrung (0 für nix)
        - Wird degradiert (Boolean)
        - Degradiert zu Beruf
+
+11. PlacedBlocks
+ - Ob man Plazierte Blöcke geld/erfahrung? (SQLite)
      
 11. Mysql
  - PlayerData
