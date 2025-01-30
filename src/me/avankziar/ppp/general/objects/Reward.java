@@ -5,6 +5,7 @@ import org.bukkit.entity.EntityType;
 
 public class Reward
 {
+	private String professionCategory;
 	private EventType eventType;
 	private Material material;
 	private EntityType entityType;
@@ -12,8 +13,10 @@ public class Reward
 	private double totalExp;
 	private double totalMoney;
 	
-	public Reward(EventType eventType, Material material, double amount, double totalExp, double totalMoney)
+	public Reward(String professionCategory, EventType eventType, Material material, 
+			double amount, double totalExp, double totalMoney)
 	{
+		setProfessionCategory(professionCategory);
 		setEventType(eventType);
 		setMaterial(material);
 		setAmount(amount);
@@ -21,13 +24,23 @@ public class Reward
 		setTotalMoney(totalMoney);
 	}
 	
-	public Reward(EventType eventType, EntityType entityType, double amount, double totalExp, double totalMoney)
+	public Reward(String professionCategory, EventType eventType, EntityType entityType, double amount, 
+			double totalExp, double totalMoney)
 	{
+		setProfessionCategory(professionCategory);
 		setEventType(eventType);
 		setEntityType(entityType);
 		setAmount(amount);
 		setTotalExp(totalExp);
 		setTotalMoney(totalMoney);
+	}
+
+	public String getProfessionCategory() {
+		return professionCategory;
+	}
+
+	public void setProfessionCategory(String professionCategory) {
+		this.professionCategory = professionCategory;
 	}
 
 	public EventType getEventType() {

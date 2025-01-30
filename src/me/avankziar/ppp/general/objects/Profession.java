@@ -16,7 +16,7 @@ import me.avankziar.ppp.general.database.ServerType;
 
 public class Profession implements MysqlTable<Profession>
 {
-	private int id;
+	private long id;
 	private UUID uuid;
 	private boolean isActive;
 	private String professionCategory;
@@ -28,7 +28,7 @@ public class Profession implements MysqlTable<Profession>
 	
 	public Profession() {}
 	
-	public Profession(int id, UUID uuid, boolean isActive, String professionCategory, String professionTitle,
+	public Profession(long id, UUID uuid, boolean isActive, String professionCategory, String professionTitle,
 			double actualProfessionExperience, double totalProfessionCompensationMoney,
 			long timeWhenProfessionWasAcceptFirstTime, long timeWhenProfessionWasSwitchTo)
 	{
@@ -48,12 +48,12 @@ public class Profession implements MysqlTable<Profession>
 		return ServerType.ALL;
 	}
 
-	public int getId() 
+	public long getId() 
 	{
 		return id;
 	}
 
-	public void setId(int id) 
+	public void setId(long id) 
 	{
 		this.id = id;
 	}
@@ -148,7 +148,7 @@ public class Profession implements MysqlTable<Profession>
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE TABLE IF NOT EXISTS `"+getMysqlTableName()
 				+ "` (id bigint AUTO_INCREMENT PRIMARY KEY,"
-				+ " player_uuid char(36) NOT NULL"
+				+ " player_uuid char(36) NOT NULL,"
 				+ " is_active boolean,"
 				+ " profession_category text,"
 				+ " profession_title text,"
@@ -244,7 +244,7 @@ public class Profession implements MysqlTable<Profession>
 			ArrayList<Profession> al = new ArrayList<>();
 			while (rs.next()) 
 			{
-				al.add(new Profession(rs.getInt("id"),
+				al.add(new Profession(rs.getLong("id"),
 						UUID.fromString(rs.getString("player_uuid")),
 						rs.getBoolean("is_active"),
 						rs.getString("profession_category"),

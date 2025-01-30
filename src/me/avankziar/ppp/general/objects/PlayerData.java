@@ -23,10 +23,18 @@ public class PlayerData implements MysqlTable<PlayerData>
 	private double totalProfessionExperience;
 	private double totalProfessionCompensationMoney;
 	
+	public enum RewardMessageType
+	{
+		NONE, CHAT, ACTIONBAR;
+	}
+	
+	private RewardMessageType rewardMessageType;
+	
 	public PlayerData(){}
 	
 	public PlayerData(int id, UUID uuid, String name,
-			long lastProfessionChange, double totalProfessionExperience, double totalProfessionCompensationMoney)
+			long lastProfessionChange, double totalProfessionExperience, double totalProfessionCompensationMoney,
+			RewardMessageType rewardMessageType)
 	{
 		setId(id);
 		setUUID(uuid);
@@ -34,6 +42,7 @@ public class PlayerData implements MysqlTable<PlayerData>
 		setLastProfessionChange(lastProfessionChange);
 		setTotalProfessionExperience(totalProfessionExperience);
 		setTotalProfessionCompensationMoney(totalProfessionCompensationMoney);
+		setRewardMessageType(rewardMessageType);
 	}
 	
 	public ServerType getServerType()
@@ -95,6 +104,14 @@ public class PlayerData implements MysqlTable<PlayerData>
 		this.totalProfessionCompensationMoney = totalProfessionCompensationMoney;
 	}
 
+	public RewardMessageType getRewardMessageType() {
+		return rewardMessageType;
+	}
+
+	public void setRewardMessageType(RewardMessageType rewardMessageType) {
+		this.rewardMessageType = rewardMessageType;
+	}
+
 	public String getMysqlTableName()
 	{
 		return "pppPlayerData";
@@ -108,8 +125,9 @@ public class PlayerData implements MysqlTable<PlayerData>
 				+ " player_uuid char(36) NOT NULL UNIQUE,"
 				+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
 				+ " last_prefossion_change bigint,"
-				+ " total_profession_experience double"
-				+ " total_profession_compensation_money double);");
+				+ " total_profession_experience double,"
+				+ " total_profession_compensation_money double,"
+				+ " reward_message_type text);");
 		return mysqlSetup.baseSetup(sql.toString());
 	}
 
@@ -120,14 +138,16 @@ public class PlayerData implements MysqlTable<PlayerData>
 		{
 			String sql = "INSERT INTO `" + getMysqlTableName()
 					+ "`(`player_uuid`, `player_name`,"
-					+ " `last_prefossion_change`, `total_profession_experience`, `total_profession_compensation_money`) " 
-					+ "VALUES(?, ?, ?, ?, ?)";
+					+ " `last_prefossion_change`, `total_profession_experience`, `total_profession_compensation_money`,"
+					+ " `reward_message_type`) " 
+					+ "VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 	        ps.setString(1, getUUID().toString());
 	        ps.setString(2, getName());
 	        ps.setLong(3, getLastProfessionChange());
 	        ps.setDouble(4, getTotalProfessionExperience());
 	        ps.setDouble(5, getTotalProfessionCompensationMoney());
+	        ps.setString(6, getRewardMessageType().toString());
 	        int i = ps.executeUpdate();
 	        MysqlBaseHandler.addRows(QueryType.INSERT, i);
 	        return true;
@@ -145,7 +165,8 @@ public class PlayerData implements MysqlTable<PlayerData>
 		{
 			String sql = "UPDATE `" + getMysqlTableName()
 				+ "` SET `player_uuid` = ?, `player_name` = ?, `last_prefossion_change` = ?,"
-				+ " `total_profession_experience` = ?, `total_profession_compensation_money` = ?" 
+				+ " `total_profession_experience` = ?, `total_profession_compensation_money` = ?,"
+				+ " `reward_message_type` = ?" 
 				+ " WHERE "+whereColumn;
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, getUUID().toString());
@@ -153,7 +174,8 @@ public class PlayerData implements MysqlTable<PlayerData>
 			ps.setLong(3, getLastProfessionChange());
 	        ps.setDouble(4, getTotalProfessionExperience());
 	        ps.setDouble(5, getTotalProfessionCompensationMoney());
-			int i = 6;
+	        ps.setString(6, getRewardMessageType().toString());
+			int i = 7;
 			for(Object o : whereObject)
 			{
 				ps.setObject(i, o);
@@ -194,7 +216,8 @@ public class PlayerData implements MysqlTable<PlayerData>
 						rs.getString("player_name"),
 						rs.getLong("last_prefossion_change"),
 						rs.getDouble("total_profession_experience"),
-						rs.getDouble("total_profession_compensation_money")));
+						rs.getDouble("total_profession_compensation_money"),
+						RewardMessageType.valueOf(rs.getString("reward_message_type"))));
 			}
 			return al;
 		} catch (SQLException e)

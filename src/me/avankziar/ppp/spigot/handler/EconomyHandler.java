@@ -38,6 +38,20 @@ public class EconomyHandler
 		return "MISSING ECONOMY";
 	}
 	
+	public static String getCurrency()
+	{
+		if(PPP.getPlugin().getIFHEco() != null)
+		{
+			EconomyCurrency ec = PPP.getPlugin().getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL);
+			return ec.getUniqueName();
+		}
+		if(PPP.getPlugin().getVaultEco() != null)
+		{
+			return PPP.getPlugin().getVaultEco().currencyNamePlural();
+		}
+		return "MISSING ECONOMY";
+	}
+	
 	public static boolean hasBalance(UUID uuid, double d)
 	{
 		if(PPP.getPlugin().getIFHEco() != null)

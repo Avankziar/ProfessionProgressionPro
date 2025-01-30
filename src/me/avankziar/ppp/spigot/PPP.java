@@ -28,6 +28,7 @@ import me.avankziar.ifh.general.modifier.Modifier;
 import me.avankziar.ifh.general.valueentry.ValueEntry;
 import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.economy.Economy;
+import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 import me.avankziar.ppp.general.assistance.Utility;
 import me.avankziar.ppp.general.cmdtree.BaseConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandConstructor;
@@ -53,7 +54,7 @@ public class PPP extends JavaPlugin
 {
 	public static Logger logger;
 	private static PPP plugin;
-	public static String pluginname = "Base";
+	public static String pluginname = "ProfessionProgressionPro";
 	private YamlHandler yamlHandler;
 	private YamlManager yamlManager;
 	private MysqlSetup mysqlSetup;
@@ -65,6 +66,7 @@ public class PPP extends JavaPlugin
 	private ValueEntry valueEntryConsumer;
 	private Modifier modifierConsumer;
 	private Economy ecoConsumer;
+	private MessageToVelocity mtvConsumer;
 	private static boolean worldGuard = false;
 	private net.milkbowl.vault.economy.Economy vEco;
 	
@@ -370,6 +372,7 @@ public class PPP extends JavaPlugin
 		setupIFHValueEntry();
 		setupIFHModifier();
 		setupIFHEconomy();
+		setupIFHMessageToVelocity();
 	}
 	
 	public void setupIFHValueEntry()
@@ -584,6 +587,49 @@ public class PPP extends JavaPlugin
 	public net.milkbowl.vault.economy.Economy getVaultEco()
 	{
 		return this.vEco;
+	}
+	
+	private void setupIFHMessageToVelocity() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    mtvConsumer = rsp.getProvider();
+				    logger.info(pluginname + " detected InterfaceHub >>> MessageToVelocity.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public MessageToVelocity getMtV()
+	{
+		return mtvConsumer;
 	}
 	
 	private void setupWordEditGuard()

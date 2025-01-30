@@ -52,12 +52,12 @@ public class BlockBreakPlaceListener implements Listener
 						(PPP.getWorldGuard() 
 								? WorldGuardHook.getMultiplierPEXP(player, loc) 
 								: 1) *
-						BoosterHandler.getBoosterExperience(player);
+						BoosterHandler.getBoosterExperience(player, BB, mat);
 				double moneyfactor = 1 * 
 						(PPP.getWorldGuard() 
 								? WorldGuardHook.getMultiplierMoney(player, loc) 
 								: 1) *
-						BoosterHandler.getBoosterMoney(player);
+						BoosterHandler.getBoosterMoney(player, BB, mat);
 				RewardHandler.addReward(uuid, BB, mat, typeamount, moneyfactor, expfactor);
 			}
 		}.runTaskAsynchronously(PPP.getPlugin());

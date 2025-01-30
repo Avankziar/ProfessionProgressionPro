@@ -65,4 +65,50 @@ public class CompensationHandler
 		}
 		return true;
 	}
+	
+	public static ArrayList<Compensation> getCompensation(UUID uuid, EventType eventType, Material material)
+	{
+		ArrayList<Profession> pa = ProfessionHandler.getActiveProfession(uuid);
+		ArrayList<Compensation> ca = new ArrayList<>();
+		for(Profession p : pa)
+		{
+			ProfessionFile pf = ProfessionHandler.getProfession(p.getProfessionTitle());
+			if(pf == null)
+			{
+				continue;
+			}
+			for(Compensation c : pf.getCompensation())
+			{
+				if(c.getEventType() == eventType
+						&& c.getMaterial() == material)
+				{
+					ca.add(c);
+				}
+			}
+		}
+		return ca;
+	}
+	
+	public static ArrayList<Compensation> getCompensation(UUID uuid, EventType eventType, EntityType entityType)
+	{
+		ArrayList<Profession> pa = ProfessionHandler.getActiveProfession(uuid);
+		ArrayList<Compensation> ca = new ArrayList<>();
+		for(Profession p : pa)
+		{
+			ProfessionFile pf = ProfessionHandler.getProfession(p.getProfessionTitle());
+			if(pf == null)
+			{
+				continue;
+			}
+			for(Compensation c : pf.getCompensation())
+			{
+				if(c.getEventType() == eventType
+						&& c.getEntityType() == entityType)
+				{
+					ca.add(c);
+				}
+			}
+		}
+		return ca;
+	}
 }

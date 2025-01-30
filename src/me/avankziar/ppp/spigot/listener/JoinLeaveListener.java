@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.avankziar.ppp.general.objects.PlayerData;
+import me.avankziar.ppp.general.objects.PlayerData.RewardMessageType;
 import me.avankziar.ppp.general.objects.Profession;
 import me.avankziar.ppp.spigot.PPP;
 import me.avankziar.ppp.spigot.handler.ProfessionHandler;
@@ -38,7 +39,7 @@ public class JoinLeaveListener implements Listener
 					}
 				} else
 				{
-					pd = new PlayerData(0, uuid, name, 0, 0, 0);
+					pd = new PlayerData(0, uuid, name, 0, 0, 0, RewardMessageType.CHAT); //ADDME ReweardMessageType Config Default
 					plugin.getMysqlHandler().create(pd);
 				}
 				ArrayList<Profession> pa = plugin.getMysqlHandler().getFullList(new Profession(), 
