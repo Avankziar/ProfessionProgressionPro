@@ -33,6 +33,8 @@ import me.avankziar.ppp.general.assistance.Utility;
 import me.avankziar.ppp.general.cmdtree.BaseConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandSuggest;
+import me.avankziar.ppp.general.database.SQLiteHandler;
+import me.avankziar.ppp.general.database.SQLiteSetup;
 import me.avankziar.ppp.general.database.ServerType;
 import me.avankziar.ppp.general.database.YamlHandler;
 import me.avankziar.ppp.general.database.YamlManager;
@@ -45,9 +47,11 @@ import me.avankziar.ppp.spigot.database.MysqlHandler;
 import me.avankziar.ppp.spigot.database.MysqlSetup;
 import me.avankziar.ppp.spigot.handler.BoosterHandler;
 import me.avankziar.ppp.spigot.handler.ConfigHandler;
+import me.avankziar.ppp.spigot.handler.ProfessionHandler;
 import me.avankziar.ppp.spigot.handler.RewardHandler;
 import me.avankziar.ppp.spigot.hook.WorldGuardHook;
 import me.avankziar.ppp.spigot.listener.JoinLeaveListener;
+import me.avankziar.ppp.spigot.listener.Reward.BlockBreakPlaceListener;
 import me.avankziar.ppp.spigot.metric.Metrics;
 
 public class PPP extends JavaPlugin
@@ -59,6 +63,8 @@ public class PPP extends JavaPlugin
 	private YamlManager yamlManager;
 	private MysqlSetup mysqlSetup;
 	private MysqlHandler mysqlHandler;
+	private SQLiteSetup sqliteSetup;
+	private SQLiteHandler sqliteHandler;
 	private Utility utility;
 	private BackgroundTask backgroundTask;
 	
@@ -109,6 +115,11 @@ public class PPP extends JavaPlugin
 			return;
 		}
 		
+		sqliteSetup = new SQLiteSetup();
+		sqliteHandler = new SQLiteHandler(logger, sqliteSetup);
+		
+		ProfessionHandler.initProfession();
+		
 		BaseConstructor.init(yamlHandler);
 		utility = new Utility(mysqlHandler);
 		backgroundTask = new BackgroundTask(this);
@@ -122,8 +133,13 @@ public class PPP extends JavaPlugin
 		RewardHandler.init();
 	}
 	
+	public static boolean SHUTDOWN = false;
+	
 	public void onDisable()
 	{
+		SHUTDOWN = true;
+		RewardHandler.processReward();
+		RewardHandler.logrecordReward();
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		yamlHandler = null;
@@ -171,6 +187,16 @@ public class PPP extends JavaPlugin
 	public MysqlHandler getMysqlHandler()
 	{
 		return mysqlHandler;
+	}
+	
+	public SQLiteSetup getSQLiteSetup()
+	{
+		return sqliteSetup;
+	}
+	
+	public SQLiteHandler getSQLiteHandler()
+	{
+		return sqliteHandler;
 	}
 	
 	public Utility getUtility()
@@ -315,6 +341,8 @@ public class PPP extends JavaPlugin
 	{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new JoinLeaveListener(), plugin);
+		
+		pm.registerEvents(new BlockBreakPlaceListener(), plugin);
 	}
 	
 	public boolean reload() throws IOException

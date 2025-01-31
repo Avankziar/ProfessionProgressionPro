@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.avankziar.ppp.general.objects.Profession;
 import me.avankziar.ppp.general.objects.ProfessionFile;
+import me.avankziar.ppp.spigot.PPP;
 
 public class ProfessionHandler 
 {
@@ -49,5 +51,13 @@ public class ProfessionHandler
 	public static ProfessionFile getProfession(String professionTitle)
 	{
 		return allProfessions.get(professionTitle);
+	}
+	
+	public static void initProfession()
+	{
+		for(YamlDocument y : PPP.getPlugin().getYamlHandler().getProfessions())
+		{
+			
+		}
 	}
 }

@@ -152,4 +152,34 @@ public class TimeHandler
 		long time = y*yyyy+M*MM+d*dd + H*HH + m*mm;
 		return time;
 	}
+	
+	public static long getTiming(String l) //y-dd-HH-mm(-ss)
+	{
+		long expirationDate = 0L;
+		String[] split = l.split("-");
+		for(String s : split)
+		{
+			if(s.endsWith("y"))
+			{
+				expirationDate += Long.valueOf(s.substring(0, s.length()-1)) * 365 * 24 * 60 * 60 * 1000;
+			}
+			if(s.endsWith("d"))
+			{
+				expirationDate += Long.valueOf(s.substring(0, s.length()-1)) * 24 * 60 * 60 * 1000;
+			}
+			if(s.endsWith("H") || s.endsWith("h"))
+			{
+				expirationDate += Long.valueOf(s.substring(0, s.length()-1)) * 60 * 60 * 1000;
+			}
+			if(s.endsWith("m"))
+			{
+				expirationDate += Long.valueOf(s.substring(0, s.length()-1)) * 60 * 1000;
+			}
+			if(s.endsWith("s"))
+			{
+				expirationDate += Long.valueOf(s.substring(0, s.length()-1)) * 1000;
+			}
+		}
+		return expirationDate;
+	}
 }

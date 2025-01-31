@@ -140,6 +140,10 @@ public class RewardHandler
 			@Override
 			public void run() 
 			{
+				if(PPP.SHUTDOWN)
+				{
+					return;
+				}
 				new BukkitRunnable() 
 				{
 					@Override
@@ -165,6 +169,10 @@ public class RewardHandler
 			@Override
 			public void run() 
 			{
+				if(PPP.SHUTDOWN)
+				{
+					return;
+				}
 				LocalTime lt = LocalTime.now();
 				if(logRewardStartMinutes.contains(lt.getMinute()))
 				{
@@ -200,7 +208,7 @@ public class RewardHandler
 						? r.getMaterial().toString() : r.getEntityType().toString())
 						.replace("%amount%", String.valueOf(r.getAmount()));
 				EconomyHandler.deposit(e.getKey(), r.getTotalMoney(), category, comment);
-				if(player != null && pd.getRewardMessageType() != RewardMessageType.NONE)
+				if(player != null && pd.getRewardMessageType() != RewardMessageType.NONE && !PPP.SHUTDOWN)
 				{
 					switch(pd.getRewardMessageType())
 					{

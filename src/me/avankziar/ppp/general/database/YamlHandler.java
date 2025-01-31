@@ -63,6 +63,12 @@ public class YamlHandler implements YamlHandling
 		return mvelang;
 	}
 	
+	private ArrayList<YamlDocument> professions;
+	public ArrayList<YamlDocument> getProfessions()
+	{
+		return professions;
+	}
+	
 	public YamlHandler(YamlManager.Type type, String pluginname, Logger logger, Path directory, String administrationLanguage)
 	{
 		this.pluginname = pluginname;
@@ -122,6 +128,10 @@ public class YamlHandler implements YamlHandling
 		{
 			return false;
 		}
+		if(!mkdirProfessions())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -154,6 +164,67 @@ public class YamlHandler implements YamlHandling
 	    	return false;
 	    }
 		return true;
+	}
+	
+	private boolean mkdirProfessions()
+	{
+		File directory = new File(dataDirectory.getParent().toFile(), "/"+pluginname+"/Professions/");
+		if(!directory.exists())
+		{
+			directory.mkdirs();
+		}
+		LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, Language>>> 
+			professions = yamlManager.getProfessionKey();
+		for(String folder : professions.keySet())
+		{
+			File fol = new File(dataDirectory.getParent().toFile(), "/"+pluginname+"/Professions/"+folder);
+			if(!fol.exists())
+			{
+				fol.mkdirs();
+				LinkedHashMap<String, LinkedHashMap<String, Language>> files = professions.get(folder);
+				for(String file : files.keySet())
+				{
+					LinkedHashMap<String, Language> content = files.get(file);
+					YamlDocument y;
+					try 
+					{
+						y = YamlDocument.create(new File(directory, file+".yml"),
+								getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+						if(!setupStaticFile(file, y, content))
+						{
+							return false;
+						}
+					} catch (IOException e) 
+					{
+						return false;
+					}
+				}
+			} else
+			{
+				loadFiles(fol, getProfessions());
+			}
+		}
+		return true;
+	}
+	
+	private void loadFiles(File folder, ArrayList<YamlDocument> ylA)
+	{
+		for(File f : folder.listFiles())
+		{
+			if(f.isDirectory())
+			{
+				continue;
+			}
+			try
+			{
+				YamlDocument y = YamlDocument
+						.create(f, getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				ylA.add(y);
+			} catch(Exception e)
+			{
+				continue;
+			}
+		}
 	}
 	
 	private boolean setupStaticFile(String f, YamlDocument yd, LinkedHashMap<String, Language> map) throws IOException

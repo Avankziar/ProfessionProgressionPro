@@ -6,7 +6,10 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.bukkit.Material;
+
 import me.avankziar.ppp.general.database.Language.ISO639_2B;
+import me.avankziar.ppp.general.objects.EventType;
 import me.avankziar.ppp.spigot.ModifierValueEntry.Bypass;
 
 public class YamlManager
@@ -32,6 +35,9 @@ public class YamlManager
 	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, Language>> guisKeys = new LinkedHashMap<>();
 	
+	private static LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, Language>>>
+					professionKeys = new LinkedHashMap<>(); //folder, file, path, sectioncontent
+	
 	public YamlManager(Type type)
 	{
 		this.type = type;
@@ -39,6 +45,7 @@ public class YamlManager
 		initCommands();
 		initLanguage();
 		initModifierValueEntryLanguage();
+		initProfession();
 	}
 	
 	public ISO639_2B getLanguageType()
@@ -79,6 +86,11 @@ public class YamlManager
 	public LinkedHashMap<String, LinkedHashMap<String, Language>> getGUIKey()
 	{
 		return guisKeys;
+	}
+	
+	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, Language>>> getProfessionKey()
+	{
+		return professionKeys;
 	}
 	
 	public void setFileInput(dev.dejvokep.boostedyaml.YamlDocument yml,
@@ -542,7 +554,7 @@ public class YamlManager
 						"&c✖"}));
 	}
 	
-	public void initModifierValueEntryLanguage() //INFO:BonusMalusLanguages
+	private void initModifierValueEntryLanguage() //INFO:BonusMalusLanguages
 	{
 		mvelanguageKeys.put(Bypass.Permission.BASE.toString()+".Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -564,5 +576,43 @@ public class YamlManager
 						"&edas Plugin BaseTemplate",
 						"&eCountpermission for",
 						"&ethe plugin BaseTemplate"}));
+	}
+	
+	private void initProfession()
+	{
+		getProfessionKey().put("miner", initMiner());
+	}
+	
+	private LinkedHashMap<String, LinkedHashMap<String, Language>> initMiner()
+	{
+		LinkedHashMap<String, LinkedHashMap<String, Language>> files = new LinkedHashMap<>();
+		files.put("Junior Miners Helpassistant 2nd Helper",
+				getProfessionFile("Miner", 
+						"Junior Bergmannhilfassistenthelfergehilfe",
+						"Junior Miners Helpassistant 2nd Helper",
+						EventType.BREAKING.toString()+";"+Material.STONE.toString()+";"+"null;"+"0.1;0.15;true",
+						EventType.BREAKING.toString()+";"+Material.COBBLESTONE.toString()+";"+"null;"+"0.1;0.15;true",
+						EventType.BREAKING.toString()+";"+Material.ANDESITE.toString()+";"+"null;"+"0.15;0.2;true",
+						EventType.BREAKING.toString()+";"+Material.GRANITE.toString()+";"+"null;"+"0.15;0.2;true",
+						EventType.BREAKING.toString()+";"+Material.DIORITE.toString()+";"+"null;"+"0.15;0.2;true"));
+		return files;
+	}
+	
+	private LinkedHashMap<String, Language> getProfessionFile(String pcat, String ptitleGER, String ptitleENG,
+			String... com)
+	{
+		LinkedHashMap<String, Language> key = new LinkedHashMap<>();
+		key.put("ProfessionCategory", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						pcat}));
+		key.put("ProfessionTitle", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						ptitleGER,
+						ptitleENG}));
+		key.put("Compensation", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						com
+						}));		
+		return key;
 	}
 }
