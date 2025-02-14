@@ -26,11 +26,11 @@ public class BlockBreakPlaceListener implements Listener
 	private static EventType BB = EventType.BREAKING;
 	private static EventType BP = EventType.PLACING;
 	private static boolean TRACK_PLACED_BLOCKS = PPP.getPlugin().getYamlHandler()
-			.getConfig().getBoolean("", true); //FIXME Config
+			.getConfig().getBoolean("Reward.TrackPlacedBlocks", true);
 	private static boolean REWARD_IF_MANUALLY_PLACED_BEFORE = PPP.getPlugin().getYamlHandler()
-			.getConfig().getBoolean("", true); //FIXME Config
+			.getConfig().getBoolean("Reward.IfPlacedBlocksManually", false);
 	private static long EXPIRATION_DATE = TimeHandler.getTiming(PPP.getPlugin().getYamlHandler()
-			.getConfig().getString("")); //FIXME Config
+			.getConfig().getString("Reward.TimeWhenPlacedBlockStatusExpire"));
 	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event)
@@ -48,7 +48,6 @@ public class BlockBreakPlaceListener implements Listener
 		final UUID uuid = player.getUniqueId();
 		final Material mat = event.getBlock().getType();
 		final Location loc = event.getBlock().getLocation();
-		double typeamount = 1;
 		if(CompensationHandler.dropItems(uuid, BB, mat))
 		{
 			event.setDropItems(false);
@@ -76,7 +75,7 @@ public class BlockBreakPlaceListener implements Listener
 								? WorldGuardHook.getMultiplierMoney(player, loc) 
 								: 1) *
 						BoosterHandler.getBoosterMoney(player, BB, mat);
-				RewardHandler.addReward(uuid, BB, mat, typeamount, moneyfactor, expfactor);
+				RewardHandler.addReward(uuid, loc.getWorld().getName(), BB, mat, 1, moneyfactor, expfactor);
 			}
 		}.runTaskAsynchronously(PPP.getPlugin());
 	}
@@ -121,7 +120,7 @@ public class BlockBreakPlaceListener implements Listener
 								? WorldGuardHook.getMultiplierMoney(player, loc) 
 								: 1) *
 						BoosterHandler.getBoosterMoney(player, BP, mat);
-				RewardHandler.addReward(uuid, BP, mat, typeamount, moneyfactor, expfactor);
+				RewardHandler.addReward(uuid, loc.getWorld().getName(), BP, mat, typeamount, moneyfactor, expfactor);
 			}
 		}.runTaskAsynchronously(PPP.getPlugin());
 	}

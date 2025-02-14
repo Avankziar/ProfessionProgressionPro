@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import me.avankziar.ifh.general.economy.account.AccountCategory;
 import me.avankziar.ifh.general.economy.action.OrdererType;
@@ -34,6 +35,41 @@ public class EconomyHandler
 			formatter.setMaximumFractionDigits(2);
 			formatter.setMinimumFractionDigits(0);
 			return String.valueOf(d) + " " + PPP.getPlugin().getVaultEco().currencyNamePlural();
+		}
+		return "MISSING ECONOMY";
+	}
+	
+	public static String formatDouble(double d)
+	{
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ENGLISH);
+		if(PPP.getPlugin().getYamlManager().getLanguageType() == ISO639_2B.GER)
+		{
+			formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
+		}
+		formatter.setMaximumFractionDigits(2);
+		formatter.setMinimumFractionDigits(0);
+		return String.valueOf(d);
+	}
+	
+	public static String getBalance(Player player)
+	{
+		if(PPP.getPlugin().getIFHEco() != null)
+		{
+			EconomyCurrency ec = PPP.getPlugin().getIFHEco().getDefaultCurrency(CurrencyType.DIGITAL);
+			Account ac = PPP.getPlugin().getIFHEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, ec);
+			return ac != null ? PPP.getPlugin().getIFHEco().format(ac.getBalance(), ec) 
+					: PPP.getPlugin().getIFHEco().format(0.0, ec);
+		}
+		if(PPP.getPlugin().getVaultEco() != null)
+		{
+			DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.ENGLISH);
+			if(PPP.getPlugin().getYamlManager().getLanguageType() == ISO639_2B.GER)
+			{
+				formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
+			}
+			formatter.setMaximumFractionDigits(2);
+			formatter.setMinimumFractionDigits(0);
+			return String.valueOf(PPP.getPlugin().getVaultEco().getBalance(player))+ " " + PPP.getPlugin().getVaultEco().currencyNamePlural();
 		}
 		return "MISSING ECONOMY";
 	}

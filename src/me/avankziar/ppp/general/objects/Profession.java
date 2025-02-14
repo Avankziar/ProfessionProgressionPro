@@ -154,8 +154,8 @@ public class Profession implements MysqlTable<Profession>
 				+ " profession_title text,"
 				+ " actual_profession_experience double,"
 				+ " total_profession_compensation_money double,"
-				+ " time_when_profession_was_accept_first_time long,"
-				+ " time_when_profession_was_switch_to long;");
+				+ " time_when_profession_was_accept_first_time bigint,"
+				+ " time_when_profession_was_switch_to bigint;");
 		return mysqlSetup.baseSetup(sql.toString());
 	}
 

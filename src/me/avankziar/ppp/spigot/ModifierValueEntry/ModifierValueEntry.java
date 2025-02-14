@@ -128,6 +128,49 @@ public class ModifierValueEntry
 		return possibleAmount;
 	}
 	
+	public static int getResult(@NonNull Player player, double value, Bypass.Counter countPermission, String addition)
+	{
+		if(player.hasPermission(Bypass.get(countPermission)+addition+"*"))
+		{
+			return Integer.MAX_VALUE;
+		}
+		int possibleAmount = 0;
+		CountType ct = new ConfigHandler().getCountPermType();
+		switch(ct)
+		{
+		case ADDUP:
+			for(int i = 1000; i >= 0; i--)
+			{
+				if(player.hasPermission(Bypass.get(countPermission)+addition+""+i))
+				{
+					possibleAmount += i;
+				}
+			}
+			break;
+		case HIGHEST:
+			for(int i = 1000; i >= 0; i--)
+			{
+				if(player.hasPermission(Bypass.get(countPermission)+addition+""+i))
+				{
+					possibleAmount = i;
+					break;
+				}
+			}
+			break;
+		}
+		possibleAmount += (int) value;
+		if(PPP.getPlugin().getModifier() != null)
+		{
+			return (int) PPP.getPlugin().getModifier().getResult(
+					player.getUniqueId(),
+					possibleAmount,
+					countPermission.getModification(),
+					PPP.getPlugin().getServername(),
+					player.getWorld().getName());
+		}
+		return possibleAmount;
+	}
+	
 	public static double getResult(UUID uuid, double value, Bypass.Counter countPermission)
 	{
 		double possibleAmount = value;

@@ -32,7 +32,7 @@ public class Bypass
 	public enum Counter
 	{
 		//Here BonusMalus and CountPermission Things
-		BASE(true);
+		REGISTER_BLOCK_(true);
 		
 		private boolean forPermission;
 		

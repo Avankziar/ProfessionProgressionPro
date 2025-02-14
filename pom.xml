@@ -170,5 +170,11 @@
 		    <version>7.0.10</version>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- Apache Commons IO -->
+		<dependency>
+		  <groupId>commons-io</groupId>
+		  <artifactId>commons-io</artifactId>
+		  <version>2.16.1</version>
+		</dependency>
 	</dependencies>
 </project>

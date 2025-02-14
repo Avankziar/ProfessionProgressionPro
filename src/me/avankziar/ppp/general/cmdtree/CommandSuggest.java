@@ -9,7 +9,11 @@ public class CommandSuggest
 	 */
 	public enum Type 
 	{
-		BASE,
+		PPP,
+		PROFESSION,
+		PROFESSION_INFO,
+		PROFESSION_COMPENSATION,
+		PROFESSION_PROMOTE,
 		BASE_BASE
 	}
 	

@@ -61,4 +61,13 @@ public class MessageHandler
 			return;
 		}
 	}
+	
+	public static void sendActionBar(Player player, String...array)
+	{
+		if(player != null)
+		{
+			Arrays.asList(array).stream().forEach(x -> player.spigot().sendMessage(ChatMessageType.ACTION_BAR, ChatApi.tl(x)));
+			return;
+		}
+	}
 }

@@ -30,6 +30,7 @@ import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.economy.Economy;
 import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 import me.avankziar.ppp.general.assistance.Utility;
+import me.avankziar.ppp.general.cmdtree.ArgumentConstructor;
 import me.avankziar.ppp.general.cmdtree.BaseConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandSuggest;
@@ -40,8 +41,10 @@ import me.avankziar.ppp.general.database.YamlHandler;
 import me.avankziar.ppp.general.database.YamlManager;
 import me.avankziar.ppp.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.ppp.spigot.assistance.BackgroundTask;
-import me.avankziar.ppp.spigot.cmd.BaseCommandExecutor;
+import me.avankziar.ppp.spigot.cmd.PPPCommandExecutor;
+import me.avankziar.ppp.spigot.cmd.ProfessionCommandExecutor;
 import me.avankziar.ppp.spigot.cmd.TabCompletion;
+import me.avankziar.ppp.spigot.cmd.profession.ARGInfo;
 import me.avankziar.ppp.spigot.cmdtree.ArgumentModule;
 import me.avankziar.ppp.spigot.database.MysqlHandler;
 import me.avankziar.ppp.spigot.database.MysqlSetup;
@@ -52,6 +55,29 @@ import me.avankziar.ppp.spigot.handler.RewardHandler;
 import me.avankziar.ppp.spigot.hook.WorldGuardHook;
 import me.avankziar.ppp.spigot.listener.JoinLeaveListener;
 import me.avankziar.ppp.spigot.listener.Reward.BlockBreakPlaceListener;
+import me.avankziar.ppp.spigot.listener.Reward.BreedListener;
+import me.avankziar.ppp.spigot.listener.Reward.BrewListener;
+import me.avankziar.ppp.spigot.listener.Reward.BucketEmptyFillListener;
+import me.avankziar.ppp.spigot.listener.Reward.Cold_ForgingRenameListener;
+import me.avankziar.ppp.spigot.listener.Reward.CookMeltSmeltSmokeListener;
+import me.avankziar.ppp.spigot.listener.Reward.CraftItemListener;
+import me.avankziar.ppp.spigot.listener.Reward.DryingListener;
+import me.avankziar.ppp.spigot.listener.Reward.DyingHarmingKillingListener;
+import me.avankziar.ppp.spigot.listener.Reward.EnchantListener;
+import me.avankziar.ppp.spigot.listener.Reward.EntityInteractListener;
+import me.avankziar.ppp.spigot.listener.Reward.ExplodeIgnitingListener;
+import me.avankziar.ppp.spigot.listener.Reward.FertilizeListener;
+import me.avankziar.ppp.spigot.listener.Reward.FishingListener;
+import me.avankziar.ppp.spigot.listener.Reward.GrindstoneListener;
+import me.avankziar.ppp.spigot.listener.Reward.HarvestListener;
+import me.avankziar.ppp.spigot.listener.Reward.ItemBreakListener;
+import me.avankziar.ppp.spigot.listener.Reward.ItemConsumeListener;
+import me.avankziar.ppp.spigot.listener.Reward.ShearListener;
+import me.avankziar.ppp.spigot.listener.Reward.SheepDyeListener;
+import me.avankziar.ppp.spigot.listener.Reward.SmithingListener;
+import me.avankziar.ppp.spigot.listener.Reward.StatisticIncrementListener;
+import me.avankziar.ppp.spigot.listener.Reward.StoneCutterListener;
+import me.avankziar.ppp.spigot.listener.Reward.TameListener;
 import me.avankziar.ppp.spigot.metric.Metrics;
 
 public class PPP extends JavaPlugin
@@ -86,13 +112,12 @@ public class PPP extends JavaPlugin
 		plugin = this;
 		logger = getLogger();
 		
-		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=Base
-		logger.info("  | API-Version: "+plugin.getDescription().getAPIVersion());
-		logger.info("  | Author: "+plugin.getDescription().getAuthors().toString());
-		logger.info("  | Plugin Website: "+plugin.getDescription().getWebsite());
-		logger.info("  | Depend Plugins: "+plugin.getDescription().getDepend().toString());
-		logger.info("  | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
-		logger.info("  | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
+		logger.info(" ██████╗ ██████╗ ██████╗  | API-Version: "+plugin.getDescription().getAPIVersion());
+		logger.info(" ██╔══██╗██╔══██╗██╔══██╗ | Author: "+plugin.getDescription().getAuthors().toString());
+		logger.info(" ██████╔╝██████╔╝██████╔╝ | Plugin Website: "+plugin.getDescription().getWebsite());
+		logger.info(" ██╔═══╝ ██╔═══╝ ██╔═══╝  | Depend Plugins: "+plugin.getDescription().getDepend().toString());
+		logger.info(" ██║     ██║     ██║      | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
+		logger.info(" ╚═╝     ╚═╝     ╚═╝      | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
 		
 		setupIFHAdministration();
 		
@@ -138,8 +163,7 @@ public class PPP extends JavaPlugin
 	public void onDisable()
 	{
 		SHUTDOWN = true;
-		RewardHandler.processReward();
-		RewardHandler.logrecordReward();
+		RewardHandler.shutdown();
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		yamlHandler = null;
@@ -219,8 +243,18 @@ public class PPP extends JavaPlugin
 	{		
 		TabCompletion tab = new TabCompletion();
 		
-		CommandConstructor base = new CommandConstructor(CommandSuggest.Type.BASE, "base", false, false);
-		registerCommand(base, new BaseCommandExecutor(plugin, base), tab);
+		CommandConstructor ppp = new CommandConstructor(CommandSuggest.Type.PPP, "ppp", false, false);
+		registerCommand(ppp, new PPPCommandExecutor(plugin, ppp), tab);
+		
+		String path = "profession";
+		ArgumentConstructor info = new ArgumentConstructor(CommandSuggest.Type.PROFESSION_INFO, path+"_info",
+				0, 0, 1, false, false, null);
+		
+		CommandConstructor profession = new CommandConstructor(CommandSuggest.Type.PROFESSION, "profession", false, false,
+				info);
+		registerCommand(profession, new ProfessionCommandExecutor(plugin, ppp), tab);
+		
+		new ARGInfo(info);
 		
 		//ArgumentConstructor add = new ArgumentConstructor(CommandSuggest.Type.FRIEND_ADD, "friend_add", 0, 1, 1, false, playerMapI);
 		//CommandConstructor friend = new CommandConstructor(CommandSuggest.Type.FRIEND, "friend", false, add, remove);
@@ -343,6 +377,29 @@ public class PPP extends JavaPlugin
 		pm.registerEvents(new JoinLeaveListener(), plugin);
 		
 		pm.registerEvents(new BlockBreakPlaceListener(), plugin);
+		pm.registerEvents(new BreedListener(), plugin);
+		pm.registerEvents(new BrewListener(), plugin);
+		pm.registerEvents(new BucketEmptyFillListener(), plugin);
+		pm.registerEvents(new Cold_ForgingRenameListener(), plugin);
+		pm.registerEvents(new CookMeltSmeltSmokeListener(), plugin);
+		pm.registerEvents(new CraftItemListener(), plugin);
+		pm.registerEvents(new DryingListener(), plugin);
+		pm.registerEvents(new DyingHarmingKillingListener(), plugin);
+		pm.registerEvents(new EnchantListener(), plugin);
+		pm.registerEvents(new EntityInteractListener(), plugin);
+		pm.registerEvents(new ExplodeIgnitingListener(), plugin);
+		pm.registerEvents(new FertilizeListener(), plugin);
+		pm.registerEvents(new FishingListener(), plugin);
+		pm.registerEvents(new GrindstoneListener(), plugin);
+		pm.registerEvents(new HarvestListener(), plugin);
+		pm.registerEvents(new ItemBreakListener(), plugin);
+		pm.registerEvents(new ItemConsumeListener(), plugin);
+		pm.registerEvents(new ShearListener(), plugin);
+		pm.registerEvents(new SheepDyeListener(), plugin);
+		pm.registerEvents(new StatisticIncrementListener(), plugin);
+		pm.registerEvents(new SmithingListener(), plugin);
+		pm.registerEvents(new StoneCutterListener(), plugin);
+		pm.registerEvents(new TameListener(), plugin);
 	}
 	
 	public boolean reload() throws IOException
@@ -536,7 +593,7 @@ public class PPP extends JavaPlugin
 						ModificationType bmt = null;
 						switch(ept)
 						{
-						case BASE:
+						case REGISTER_BLOCK_:
 							bmt = ModificationType.UP;
 							break;
 						}

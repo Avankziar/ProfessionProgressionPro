@@ -125,14 +125,15 @@ Konzept:
  
 8. Commands
  - /ppp | Befehlsübersicht
- - /profession | Öffnet ein Gui welches in ein Übersichtsfeld geht.
- - /profession info [Spielername] | Zeigt alle aktive & deaktiven Berufe des Spielers an. 
-   Sowie die total erhalten Berufserfahrung und das totale erwirtschafte Geld Insgesamt und per Berufskategorie.
+ - /profession | Zeigt alle aktive Berufe des Spielers an.
+ - /profession gui | Öffnet ein Gui welches in ein Übersichtsfeld geht.
+ - /profession info [Berufskategorie] | Zeigt alle aktive & deaktiven Berufe des Spielers an. Optinal nur die eine Berufkategorie.
+   Sowie die total erhalten Berufserfahrung sowie AnnahmeZeit und das totale erwirtschafte Geld Insgesamt und per Berufskategorie.
    und total erwirtschaftetes Geld.
- - /profession show <Berufskategorie> | Zeigt den Beruf an. Ob aktiv/deaktiv/nicht angenommen, sowie AnnahmeZeit
-   etc.
  - /profession log <Berufskategorie> [Spielername] | Zeigt für das Berufslog für die Beruskategorie an.
  - /profession progression <Berufskategorie> [Spielername] | Zeit den Werdegang in der Berufskategorie an.
+ - /profession promotion [Berufskategorie] | Zeigt alle Berufe welche Befördert werden können. Optional akzeptiert die Beförderung.
+ - /profession change [Berufskategorie] [Berufskategorie] | Zeigt alle aktive Berufe welche gewächselt werden können. Optional Verlässt den Beruf und aktzeptiert den Zweiten.
  - /profession compensation <Berufskategorie> [Material/EntityType] | Zeigt die Vergütung der Berufskategorie an.
    Optional auch nur für das angegebenen Material bzw. EntitytType.
    Booster(Permission) eingerechnet.
@@ -140,6 +141,9 @@ Konzept:
    wieviel man mit dem aktuellen Werkzeug in der Haupthand Geld und Berufserfahrung erhalten würde, wenn man in einer Stunde
    nur dies machen würde.
  - /profession join <Berufskategorie> | Nimmt den Beruf an.
+ - /profession scoreboard | Toggelt das Scoreboard.
+ - /profession usefreeexp <Berufskategorie> | Vergibt freie Berufserfahrung an die Berufskategorie. Maximal bis zur Berufserfahrung des aktuellen Berufstitel.
+ - /profession givefreexp <Spielername> <Betrag> | Vergibt freie Berufserfahrung an den Spieler.
 
 9. GUI (?)
  - /profession | Öffnet ein Gui welches in ein Übersichtsfeld geht. (MainGui)
@@ -187,9 +191,15 @@ Konzept:
        - Verliert BErufserfahrung (0 für nix)
        - Wird degradiert (Boolean)
        - Degradiert zu Beruf
+ - Welten BlackList/Whitelist
 
 11. PlacedBlocks
  - Ob man Plazierte Blöcke geld/erfahrung? (SQLite)
+
+12. ScoreBoard
+ - Anzeige welche Berufe aktiv sind.
+ - Was man die letzten sekunden verdient hat.
+ - An- & ausschaltbar sein.
      
 11. Mysql
  - PlayerData

@@ -2,7 +2,6 @@ package me.avankziar.ppp.spigot.cmd;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,25 +9,27 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.avankziar.ppp.general.assistance.ChatApi;
-import me.avankziar.ppp.general.assistance.ChatApiV;
-import me.avankziar.ppp.general.assistance.MatchApi;
 import me.avankziar.ppp.general.cmdtree.ArgumentConstructor;
-import me.avankziar.ppp.general.cmdtree.BaseConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandConstructor;
 import me.avankziar.ppp.general.cmdtree.CommandSuggest;
+import me.avankziar.ppp.general.cmdtree.CommandSuggest.Type;
+import me.avankziar.ppp.general.objects.Profession;
+import me.avankziar.ppp.general.objects.ProfessionFile;
 import me.avankziar.ppp.spigot.PPP;
 import me.avankziar.ppp.spigot.ModifierValueEntry.ModifierValueEntry;
 import me.avankziar.ppp.spigot.cmdtree.ArgumentModule;
+import me.avankziar.ppp.spigot.handler.MessageHandler;
+import me.avankziar.ppp.spigot.handler.ProfessionHandler;
 
-public class BaseCommandExecutor implements CommandExecutor
+public class ProfessionCommandExecutor implements CommandExecutor
 {
 	private PPP plugin;
 	private static CommandConstructor cc;
 	
-	public BaseCommandExecutor(PPP plugin, CommandConstructor cc)
+	public ProfessionCommandExecutor(PPP plugin, CommandConstructor cc)
 	{
 		this.plugin = plugin;
-		BaseCommandExecutor.cc = cc;
+		ProfessionCommandExecutor.cc = cc;
 	}
 	
 	@Override
@@ -38,26 +39,7 @@ public class BaseCommandExecutor implements CommandExecutor
 		{
 			return false;
 		}
-		if (args.length == 1) 
-		{
-			if (!(sender instanceof Player)) 
-			{
-				plugin.getLogger().info("Cmd is only for Player!");
-				return false;
-			}
-			Player player = (Player) sender;
-			if(MatchApi.isInteger(args[0]))
-			{
-				if(!ModifierValueEntry.hasPermission(player, cc))
-				{
-					///Du hast dafür keine Rechte!
-					player.spigot().sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
-					return false;
-				}
-				baseCommands(player, Integer.parseInt(args[0])); //Base and Info Command
-				return true;
-			}
-		} else if(args.length == 0)
+		if(args.length == 0)
 		{
 			if (!(sender instanceof Player)) 
 			{
@@ -71,7 +53,7 @@ public class BaseCommandExecutor implements CommandExecutor
 				player.spigot().sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
-			baseCommands(player, 0); //Base and Info Command
+			baseCommands(player); //Base and Info Command
 			return true;
 		}
 		int length = args.length-1;
@@ -146,79 +128,26 @@ public class BaseCommandExecutor implements CommandExecutor
 			}
 		}
 		sender.spigot().sendMessage(ChatApi.tl(ChatApi.click(plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-				"RUN_COMMAND", CommandSuggest.getCmdString(CommandSuggest.Type.BASE))));
+				"RUN_COMMAND", CommandSuggest.getCmdString(CommandSuggest.Type.PROFESSION))));
 		return false;
 	}
 	
-	public void baseCommands(final Player player, int page)
+	private void baseCommands(Player player)
 	{
-		int index = 0;
-		int count = 0;
-		int start = page*10;
-		int quantity = 9;
-		int control = start;
 		ArrayList<String> msg = new ArrayList<>();
-		msg.add(plugin.getYamlHandler().getLang().getString("Headline"));
-		for(BaseConstructor bc : plugin.getHelpList().stream().filter(x -> player.hasPermission(x.getPermission())).collect(Collectors.toList()))
+		msg.add(plugin.getYamlHandler().getLang().getString("Profession.Base.Headline"));
+		for(Profession prof : ProfessionHandler.getActiveProfession(player.getUniqueId()))
 		{
-			if(index >= start && count <= quantity)
-			{
-				msg.add(sendInfo(bc));
-				count++;
-				control++;
-			}
-			index++;
+			ProfessionFile pf = ProfessionHandler.getProfession(prof.getProfessionTitle());
+			msg.add(ChatApi.clickHover(plugin.getYamlHandler().getLang().getString("Profession.Base.Info")
+					.replace("%titel%", prof.getProfessionTitle())
+					.replace("%actualexp%", String.valueOf(prof.getActualProfessionExperience()))
+					.replace("%maxpexp%", String.valueOf(pf.getPromotionNeededProfessionExperience())),
+					"RUN_COMMAND", CommandSuggest.get(Type.PROFESSION_INFO)+pf.getProfessionCategory(),
+					"SHOW_TEXT", plugin.getYamlHandler().getLang().getString("GeneralHover")
+					));
 		}
-		String s = pastNextPage(player, page, control, plugin.getHelpList().size(), CommandSuggest.getCmdString(CommandSuggest.Type.BASE));
-		if(s != null)
-		{
-			msg.add(s);
-		}
-		msg.stream().forEach(x -> player.spigot().sendMessage(ChatApi.tl(x)));
-	}
-	
-	private String sendInfo(BaseConstructor bc)
-	{
-		return (ChatApiV.clickHover(
-				bc.getHelpInfo(),
-				"SUGGEST_COMMAND", bc.getSuggestion(),
-				"SHOW_TEXT", plugin.getYamlHandler().getLang().getString("GeneralHover")));
-	}
-	
-	public String pastNextPage(Player player,
-			int page, int control, int total, String cmdstring, String...objects)
-	{
-		if(page == 0 && control >= total)
-		{
-			return null;
-		}
-		int i = page+1;
-		int j = page-1;
-		StringBuilder sb = new StringBuilder();
-		if(page != 0)
-		{
-			String msg2 = plugin.getYamlHandler().getLang().getString("Past");
-			String cmd = cmdstring+String.valueOf(j);
-			for(String o : objects)
-			{
-				cmd += " "+o;
-			}
-			sb.append(ChatApiV.click(msg2, "RUN_COMMAND", cmd));
-		}
-		if(control < total)
-		{
-			String msg1 = plugin.getYamlHandler().getLang().getString("Next");
-			String cmd = cmdstring+String.valueOf(i);
-			for(String o : objects)
-			{
-				cmd += " "+o;
-			}
-			if(sb.length() > 0)
-			{
-				sb.append(" | ");
-			}
-			sb.append(ChatApiV.click(msg1, "RUN_COMMAND", cmd));
-		}
-		return sb.toString();
+		msg.add(plugin.getYamlHandler().getLang().getString("Profession.Base.Bottomline"));
+		msg.forEach(x -> MessageHandler.sendMessage(player, x));
 	}
 }

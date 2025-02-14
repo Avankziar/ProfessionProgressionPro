@@ -27,6 +27,7 @@ public enum EventType
 	ITEM_CONSUME,
 	INTERACT, //To interact with f.e. CraftingTable, Furnace etc.
 	KILLING,
+	LOOTING,
 	MELTING,
 	MILKING, //Cows
 	PLACING,
@@ -39,7 +40,17 @@ public enum EventType
 	SMITHING,
 	SMOKING,
 	STONECUTTING,
-	TAMING;
+	TAMING,
+	//Statistic PlayerStatisticIncrementEvent
+	CLIMBING,
+	CROUCHING,
+	FALLING,
+	FLYING,
+	JUMPING,
+	WALKING_ON_EARTH,
+	WALKING_ON_WATER,
+	WALKING_UNDER_WATER,
+	;
 	
 	//ADDME Possible new EventTypes
 	/*
