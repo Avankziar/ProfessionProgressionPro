@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import me.avankziar.ifh.general.modifier.Modifier;
 import me.avankziar.ifh.general.valueentry.ValueEntry;
 import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.economy.Economy;
+import me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 import me.avankziar.ppp.general.assistance.Utility;
 import me.avankziar.ppp.general.cmdtree.ArgumentConstructor;
@@ -39,11 +41,13 @@ import me.avankziar.ppp.general.database.SQLiteSetup;
 import me.avankziar.ppp.general.database.ServerType;
 import me.avankziar.ppp.general.database.YamlHandler;
 import me.avankziar.ppp.general.database.YamlManager;
+import me.avankziar.ppp.general.objects.ProfessionFile;
 import me.avankziar.ppp.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.ppp.spigot.assistance.BackgroundTask;
 import me.avankziar.ppp.spigot.cmd.PPPCommandExecutor;
 import me.avankziar.ppp.spigot.cmd.ProfessionCommandExecutor;
 import me.avankziar.ppp.spigot.cmd.TabCompletion;
+import me.avankziar.ppp.spigot.cmd.profession.ARGCompensation;
 import me.avankziar.ppp.spigot.cmd.profession.ARGInfo;
 import me.avankziar.ppp.spigot.cmdtree.ArgumentModule;
 import me.avankziar.ppp.spigot.database.MysqlHandler;
@@ -99,6 +103,7 @@ public class PPP extends JavaPlugin
 	private Modifier modifierConsumer;
 	private Economy ecoConsumer;
 	private MessageToVelocity mtvConsumer;
+	private EnumTranslation etlConsumer;
 	private static boolean worldGuard = false;
 	private net.milkbowl.vault.economy.Economy vEco;
 	
@@ -240,7 +245,21 @@ public class PPP extends JavaPlugin
 	}
 	
 	private void setupCommandTree()
-	{		
+	{
+		ArrayList<String> profcat = new ArrayList<>();
+		for(ProfessionFile prof : ProfessionHandler.getProfession().values())
+		{
+			if(!profcat.contains(prof.getProfessionCategory()))
+			{
+				profcat.add(prof.getProfessionCategory());
+			}
+		}
+		Collections.sort(profcat);
+		LinkedHashMap<Integer, ArrayList<String>> profcat_ = new LinkedHashMap<>();
+		profcat_.put(1,profcat);
+		LinkedHashMap<Integer, ArrayList<String>> page_profcat = new LinkedHashMap<>();
+		page_profcat.put(2,profcat);
+		
 		TabCompletion tab = new TabCompletion();
 		
 		CommandConstructor ppp = new CommandConstructor(CommandSuggest.Type.PPP, "ppp", false, false);
@@ -248,12 +267,15 @@ public class PPP extends JavaPlugin
 		
 		String path = "profession";
 		ArgumentConstructor info = new ArgumentConstructor(CommandSuggest.Type.PROFESSION_INFO, path+"_info",
-				0, 0, 1, false, false, null);
+				0, 0, 1, false, false, profcat_);
+		ArgumentConstructor compensation = new ArgumentConstructor(CommandSuggest.Type.PROFESSION_COMPENSATION, path+"_compensation",
+				0, 0, 2, false, false, page_profcat);
 		
 		CommandConstructor profession = new CommandConstructor(CommandSuggest.Type.PROFESSION, "profession", false, false,
-				info);
+				compensation, info);
 		registerCommand(profession, new ProfessionCommandExecutor(plugin, ppp), tab);
 		
+		new ARGCompensation(compensation);
 		new ARGInfo(info);
 		
 		//ArgumentConstructor add = new ArgumentConstructor(CommandSuggest.Type.FRIEND_ADD, "friend_add", 0, 1, 1, false, playerMapI);
@@ -458,6 +480,7 @@ public class PPP extends JavaPlugin
 		setupIFHModifier();
 		setupIFHEconomy();
 		setupIFHMessageToVelocity();
+		setupIFHEnumTransaltion();
 	}
 	
 	public void setupIFHValueEntry()
@@ -715,6 +738,49 @@ public class PPP extends JavaPlugin
 	public MessageToVelocity getMtV()
 	{
 		return mtvConsumer;
+	}
+	
+	private void setupIFHEnumTransaltion() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.interfaces.EnumTranslation.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    etlConsumer = rsp.getProvider();
+				    logger.info(pluginname + " detected InterfaceHub >>> EnumTranslation.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public EnumTranslation getEnumTransaltion()
+	{
+		return etlConsumer;
 	}
 	
 	private void setupWordEditGuard()

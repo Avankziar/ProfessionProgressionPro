@@ -32,7 +32,7 @@ public class EconomyHandler
 			{
 				formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
 			}
-			formatter.setMaximumFractionDigits(2);
+			formatter.setMaximumFractionDigits(3);
 			formatter.setMinimumFractionDigits(0);
 			return String.valueOf(d) + " " + PPP.getPlugin().getVaultEco().currencyNamePlural();
 		}
@@ -46,7 +46,7 @@ public class EconomyHandler
 		{
 			formatter = (DecimalFormat) NumberFormat.getInstance(Locale.GERMAN);
 		}
-		formatter.setMaximumFractionDigits(2);
+		formatter.setMaximumFractionDigits(3);
 		formatter.setMinimumFractionDigits(0);
 		return String.valueOf(d);
 	}

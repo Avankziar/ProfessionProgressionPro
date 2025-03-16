@@ -3,11 +3,11 @@ package me.avankziar.ppp.spigot.handler;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,8 +30,8 @@ import me.avankziar.ppp.spigot.PPP;
 
 public class RewardHandler 
 {
-	private static LinkedHashMap<UUID, ArrayList<Reward>> toProcessRewards = new LinkedHashMap<>();
-	private static LinkedHashMap<UUID, ArrayList<Reward>> toLogRecordRewards = new LinkedHashMap<>();
+	private static ConcurrentHashMap<UUID, ArrayList<Reward>> toProcessRewards = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<UUID, ArrayList<Reward>> toLogRecordRewards = new ConcurrentHashMap<>();
 	
 	public static ArrayList<Reward> getReward(UUID uuid)
 	{
@@ -200,7 +200,7 @@ public class RewardHandler
 					@Override
 					public void run() 
 					{
-						final LinkedHashMap<UUID, ArrayList<Reward>> rewards = toProcessRewards;
+						final ConcurrentHashMap<UUID, ArrayList<Reward>> rewards = toProcessRewards;
 						toProcessRewards.clear();
 						for(Entry<UUID, ArrayList<Reward>> e : rewards.entrySet())
 						{
@@ -247,7 +247,7 @@ public class RewardHandler
 	
 	public static void shutdown()
 	{
-		final LinkedHashMap<UUID, ArrayList<Reward>> rewards = toProcessRewards;
+		final ConcurrentHashMap<UUID, ArrayList<Reward>> rewards = toProcessRewards;
 		toProcessRewards.clear();
 		for(Entry<UUID, ArrayList<Reward>> e : rewards.entrySet())
 		{
@@ -311,7 +311,7 @@ public class RewardHandler
 	
 	public static void logrecordReward()
 	{
-		final LinkedHashMap<UUID, ArrayList<Reward>> rewards = toLogRecordRewards;
+		final ConcurrentHashMap<UUID, ArrayList<Reward>> rewards = toLogRecordRewards;
 		toLogRecordRewards.clear();
 		for(Entry<UUID, ArrayList<Reward>> e : rewards.entrySet())
 		{

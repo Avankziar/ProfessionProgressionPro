@@ -558,6 +558,14 @@ public class YamlManager
 				"<aqua>Commandright for <white>/profession info",
 				"<yellow>Zeigt alle aktive & deaktive Berufe an. Optional detailierte Einsicht in den jeweiligen Beruf.",
 				"<yellow>Shows all active & active professions. Optional detailed insight into the respective profession.");
+		argumentInput("profession_compensation", "compensation", basePermission,
+				"/profession compensation [professioncategory]", "/profession info ", false,
+				"<red>/profession compensation [Seite] [professioncategory] <white>| Zeigt die Vergütung an. Optional für eine bestimmte ProfessionKategorie.",
+				"<red>/profession compensation [page][professioncategory] <white>| Shows the compensation. Optional für a specific professioncategory.",
+				"<aqua>Befehlsrecht für <white>/profession compensation",
+				"<aqua>Commandright for <white>/profession compensation",
+				"<yellow>Zeigt die Vergütung an. Optional für eine bestimmte ProfessionKategorie.",
+				"<yellow>Shows the compensation. Optional für a specific professioncategory.");
 	}
 	
 	private void comBypass() //INFO:ComBypass
@@ -771,6 +779,22 @@ public class YamlManager
 		languageKeys.put("Profession.Info.Compensation", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<gray>Um die Vergütung einzusehen, klicke <red>{hier}<gray>!",
+						""}));
+		languageKeys.put("Profession.Compensation.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<gray>========<gold>Vergütung<gray>========",
+						""}));
+		languageKeys.put("Profession.Compensation.Explanation", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<gray>Die Werte sind wie folgt: BasisWert * WordGuardFlagFaktor * PermissionBooster = Resultat",
+						""}));
+		languageKeys.put("Profession.Compensation.EventType", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<gold>%eventtype%:",
+						""}));
+		languageKeys.put("Profession.Compensation.Line", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"  <white>%matORentity% -> <yellow>%money% <white>| <gray>%exp% Exp",
 						""}));
 	}
 	

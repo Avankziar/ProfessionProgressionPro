@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -19,9 +20,9 @@ import me.avankziar.ppp.spigot.PPP;
 
 public class ProfessionHandler 
 {
-	private static LinkedHashMap<UUID, ArrayList<Profession>> activeProfession = new LinkedHashMap<>();
+	private static ConcurrentHashMap<UUID, ArrayList<Profession>> activeProfession = new ConcurrentHashMap<>();
 	
-	public static LinkedHashMap<UUID, ArrayList<Profession>> getActiveProfession()
+	public static ConcurrentHashMap<UUID, ArrayList<Profession>> getActiveProfession()
 	{
 		return activeProfession;
 	}
@@ -57,16 +58,21 @@ public class ProfessionHandler
 		activeProfession.remove(uuid);
 	}
 	
-	private static LinkedHashMap<String, ProfessionFile> allProfessions = new LinkedHashMap<>(); //Key professionTilte
+	private static ConcurrentHashMap<String, ProfessionFile> allProfessions = new ConcurrentHashMap<>(); //Key professionTilte
 	
 	public static ProfessionFile getProfession(String professionTitle)
 	{
 		return allProfessions.get(professionTitle);
 	}
 	
-	private static LinkedHashMap<String, ProfessionFile> startProfessions = new LinkedHashMap<>(); //Key professionTilte
+	public static ConcurrentHashMap<String, ProfessionFile> getProfession()
+	{
+		return allProfessions;
+	}
 	
-	public static LinkedHashMap<String, ProfessionFile> getStartProfession()
+	private static ConcurrentHashMap<String, ProfessionFile> startProfessions = new ConcurrentHashMap<>(); //Key professionTilte
+	
+	public static ConcurrentHashMap<String, ProfessionFile> getStartProfession()
 	{
 		return startProfessions;
 	}
@@ -82,7 +88,8 @@ public class ProfessionHandler
 		{
 			if(!y.contains("ProfessionCategory") || !y.contains("ProfessionTitle") || !y.contains("Compensation"))
 			{
-				PPP.logger.warning("");
+				PPP.logger.warning("Error in Profession File "+y.getName()
+				+"! Cannot find path ProfessionCategory or ProfessionTitle or Compensation!");
 				continue;
 			}
 			String professionCategory = y.getString("ProfessionCategory");
